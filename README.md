@@ -17,6 +17,26 @@ __```tkinter```__
 ``` cd TowersOfHanoi```
 <br>
 <br>
-```> git clone https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi.git```
+``` git clone https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi.git```
 <br>
 <br>
+Install Vitual Environment if not installed <b>CAN BE IGNORED</b>
+<br>
+- On Linux/MacOs
+``` python3 -m pip install --user virtualenv```
+- On windows
+``` py -m pip install --user virtualenv```
+
+Create Virtual Environment
+- On Linux/MacOS:
+``` python3 -m venv env```
+- On Windows:
+``` py -m venv env```
+
+Activate Environment:
+- On Linux and MacOS:
+``` source env/bin/activate```
+- On Windows:
+``` .\env\Scripts\activate```
+
+<br><br>
