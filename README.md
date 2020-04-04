@@ -6,3 +6,17 @@ Develop a Production System for solving Towers of Hanoi problem having any numbe
 **```pygame```**
 __```webbrowser```__
 __```tkinter```__
+
+
+
+# How to Run
+
+``` mkdir TowersOfHanoi```
+<br>
+<br>
+``` cd TowersOfHanoi```
+<br>
+<br>
+```> git clone https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi.git```
+<br>
+<br>
