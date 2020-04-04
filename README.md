@@ -25,7 +25,7 @@ Clone the Repository:
 Install and Activate Vitual Environment if not done already (<b>CAN BE IGNORED</b>)
 <br>
 - On Linux/MacOs
-``` python3 -m pip install --user virtualenv```
+``` python3 -m pip install --user virtualenv``` 
 - On windows
 ``` py -m pip install --user virtualenv```
 
