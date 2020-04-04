@@ -40,10 +40,9 @@ Activate Environment:
 ``` .\env\Scripts\activate```
 
 Install required modules:
-- For Linux/MacOS/Windows
+- For Linux/MacOS/Windows: 
 ``` pip install -r requirements.txt```  
 
-<br>
 Running the program:
 - On Linux and MacOS, to run the program <br>
 ``` python towersOfHanoi.py ```  
