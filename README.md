@@ -14,9 +14,11 @@ Create a directory:
 ``` mkdir TowersOfHanoi```
 <br>
 <br>
+<b>cd</b> into that directory: 
 ``` cd TowersOfHanoi```
 <br>
 <br>
+Clone the Repository: 
 ``` git clone https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi.git```
 <br>
 <br>
@@ -41,7 +43,7 @@ Activate Environment:
 
 Install required modules:
 - For Linux/MacOS/Windows: 
-``` pip install -r requirements.txt```  
+``` pip install -r requirements.txt```  <b>IMPORTANT!</b> <br>
 
 Running the program:
 - On Linux and MacOS, to run the program: 
