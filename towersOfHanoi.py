@@ -1,12 +1,16 @@
 import pygame, sys, time
+import webbrowser
+from tkinter import *
+from tkinter import font
+
 
 pygame.init()  # to initialize all the imported pygame modules 
 pygame.display.set_caption("Towers of Hanoi")
-screen = pygame.display.set_mode((640, 480))  
-clock = pygame.time.Clock()  #updating speed is fixed in case of any changes occur in the program
+screen = pygame.display.set_mode((640, 480))  #ye tuple type wali argument hai like (1,2)
+clock = pygame.time.Clock()  #its like ki apne program me jo bhi chize update ho sari ek fixed speed pr update ho
 
 game_done = False
-framerate = 60  # clock argument
+framerate = 60  #ye clock se related hai
 
 # game vars:
 steps = 0
@@ -16,7 +20,7 @@ towers_midx = [120, 320, 520]
 pointing_at = 0
 floating = False
 floater = 0
-x=0
+
 # colors:
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -26,69 +30,74 @@ blue = (78,162,196)
 grey = (170, 170, 170)
 green = (77, 206, 145)
 
+
+
 def blit_text(screen, text, midtop, aa=True, font=None, font_name = None, size = None, color=(255,0,0)):
     if font is None:                                    # font option is provided to save memory if font is
         font = pygame.font.SysFont(font_name, size)     # already loaded and needs to be reused many times
-    font_surface = font.render(text, aa, color)         
+    font_surface = font.render(text, aa, color) #show kr rh hai text ya font ko
     font_rect = font_surface.get_rect()
     font_rect.midtop = midtop #midtop is for positiom
-    screen.blit(font_surface, font_rect)                #blitting is like copying of one set of pixels
-    									                #to increase the reusability
+    screen.blit(font_surface, font_rect) #blitting is like copying of one set of pixels ys to fir jo cheez show ho rhi hai
+    									#to increase the reusability
 
 
 def menu_screen():  # to be called before starting actual game loop
     global screen, n_disks, game_done
     menu_done = False
-    while not menu_done:  # every screen/scene/level has its own loop
+    while not menu_done:  # every screen/scene/level has its own loop   means jab tk true hai
         screen.fill(white)
         blit_text(screen, 'Towers of Hanoi', (323,122), font_name='sans serif', size=90, color=grey)
         blit_text(screen, 'Towers of Hanoi', (320,120), font_name='sans serif', size=90, color=gold)
         blit_text(screen, 'Use arrow keys to select difficulty:', (320, 220), font_name='sans serif', size=30, color=black)
         blit_text(screen, str(n_disks), (320, 260), font_name='sans serif', size=40, color=blue)
         blit_text(screen, 'Press ENTER to continue', (320, 320), font_name='sans_serif', size=30, color=black)
-        for event in pygame.event.get():                 # user inputs
+        for event in pygame.event.get():  #inputs lo
             if event.type==pygame.KEYDOWN:
-                if event.key == pygame.K_q:            #if q is pressed
+                if event.key == pygame.K_q: #if q is pressed
                     menu_done = True
-                    game_done = True                   #end the game execution
+                    game_done = True  #end the game execution
                 if event.key == pygame.K_RETURN:
                     menu_done = True
                 if event.key in [pygame.K_RIGHT, pygame.K_UP]:
                     n_disks += 1
                     if n_disks > 6:
-                        n_disks = 6                    # maximum no. of disks=6
+                        n_disks = 6 #isko change krke maximum kitne bolock chahiye hum increase kr skte hai
                 if event.key in [pygame.K_LEFT, pygame.K_DOWN]:
                     n_disks -= 1
                     if n_disks < 1:
                         n_disks = 1
-            if event.type == pygame.QUIT:       # Quitting from game
+            if event.type == pygame.QUIT:  #end kr rhe hai window ko yua end kr rhe hai game ko
                 menu_done = True
                 game_done = True
-        pygame.display.flip()                  # any updte to be visible
-        clock.tick(60)                         # updation rate i.e, 60 is frames per seconds 
+        pygame.display.flip() #ye wali call is required in order for any updates that you make to the game screen to become visible.
+        clock.tick(60)  #60is frames per seconds ki kiss rate pr update hoga
 
 def game_over(): # game over screen
     global screen, steps
     screen.fill(white)
-    min_steps = 2**n_disks-1                 #steps required in optimal solution
+    min_steps = 2**n_disks-1 #optimal solution ke liye
     blit_text(screen, 'You Won!', (320, 200), font_name='sans serif', size=72, color=gold)
-    blit_text(screen, 'You Won!', (322, 202), font_name='sans serif', size=72, color=gold)       # providing the shadow effect in the above line
+    blit_text(screen, 'You Won!', (322, 202), font_name='sans serif', size=72, color=gold) #do baar islye kyon ki dusra wala pahe wle ke niche hai to shadow wala effect dega
     blit_text(screen, 'Your Steps: '+str(steps), (320, 360), font_name='mono', size=30, color=black)
     blit_text(screen, 'Minimum Steps: '+str(min_steps), (320, 390), font_name='mono', size=30, color=red)
     if min_steps==steps:
         blit_text(screen, 'You finished in minumum steps!', (320, 300), font_name='mono', size=26, color=green)
-    pygame.display.flip()           # updates a particular part of screen 
-    						        # where as display.update() updates the screen
-    time.sleep(2)                   # wait for 2 secs 
-    pygame.quit()                   # pygame exit
-    sys.exit()                      # console exit
+    pygame.display.flip() #ye flip only ek particular part of screen ke contents ko update krta hai
+    						#where as display.upate() pure screen ke contents ko update krta hai
+    time.sleep(2)   # wait for 2 secs 
+    pygame.quit()   #pygame exit
+    sys.exit()  #console exit
 
 def draw_towers():
     global screen
     for xpos in range(40, 460+1, 200):
         pygame.draw.rect(screen, green, pygame.Rect(xpos, 400, 160 , 20))
+        #print(xpos)
         pygame.draw.rect(screen, grey, pygame.Rect(xpos+75, 200, 10, 200))
+        #print(xpos)
     blit_text(screen, 'Start', (towers_midx[0], 403), font_name='mono', size=14, color=black)
+    #print(towers_midx[0])
     blit_text(screen, 'Finish', (towers_midx[2], 403), font_name='mono', size=14, color=black)
 
     
@@ -103,23 +112,32 @@ def make_disks():
     for i in range(n_disks):
         disk = {}
         disk['rect'] = pygame.Rect(0, 0, width, height)
-        disk['rect'].midtop = (120, ypos)                   #midtop is used for poisitoning the element
+        disk['rect'].midtop = (120, ypos)  #midtop is used for poisitoning the element
         disk['val'] = n_disks-i
+
+       # print(disk['val'])
+
         disk['tower'] = 0
         disks.append(disk)
         ypos -= height+3
         width -= 23
 
+        #print(ypos)
+        disk_number = str(i+1)
+        #print("Cordinate of disk " + disk_number)
+        #print(disk['rect'].midtop)
+        #print(xpos)
+
 
 def draw_disks():
     global screen, disks
     for disk in disks:
-        pygame.draw.rect(screen, blue, disk['rect'])                # make the disks
+        pygame.draw.rect(screen, blue, disk['rect']) #make the duisk
     return
 
 def draw_ptr():
     ptr_points = [(towers_midx[pointing_at]-7 ,440), (towers_midx[pointing_at]+7, 440), (towers_midx[pointing_at], 433)] #coordinates are specified here
-    pygame.draw.polygon(screen, red, ptr_points)           #make the arrow pointer to indicate the current selected tower
+    pygame.draw.polygon(screen, red, ptr_points) #make the arrow below the tower used to indicate the current sselcted tower
     return
 
 def check_won():
@@ -129,7 +147,7 @@ def check_won():
         if disk['tower'] != 2:  
             over = False
     if over:
-        time.sleep(0.2)                   #wait for 0.2seconds
+        time.sleep(0.2)  #wait for 0.2seconds
         game_over()
 
 def reset():
@@ -145,17 +163,17 @@ def reset():
 menu_screen()
 make_disks()
 # main game loop:
-while not game_done:                     # executes unless the game is over
-    for event in pygame.event.get():     # event indicates user input via mouse click or keyboard click
-        if event.type == pygame.QUIT:            # closing pygame modules
+while not game_done:   #by defaulkt game done is set to false so not gamedone means true
+    for event in pygame.event.get():     #event indicates kya perform ho rha hai it can be mouse click or keyboard click
+        if event.type == pygame.QUIT:  #pygame ke modules ko jab clode kr rhe hai
             game_done = True
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:     # when in between the game escape is pressed
+            if event.key == pygame.K_ESCAPE: #when in between the game escape is pressed
                 reset()
-            if event.key == pygame.K_q:          # when Q button on keyboard is pressed
+            if event.key == pygame.K_q:  #whrn Q button on keyboardis pressed
                 game_done = True
             if event.key == pygame.K_RIGHT:
-                pointing_at = (pointing_at+1)%3   # arrow pointer pointing to which tower
+                pointing_at = (pointing_at+1)%3  #axis me move krte samay right side is positive and leftside is negative wrt to any point
                 if floating:
                     disks[floater]['rect'].midtop = (towers_midx[pointing_at], 100)
                     disks[floater]['tower'] = pointing_at
@@ -178,6 +196,10 @@ while not game_done:                     # executes unless the game is over
                             floating = False
                             disks[floater]['rect'].midtop = (towers_midx[pointing_at], disk['rect'].top-23)
                             steps += 1
+
+                            #print(disks[floater]['rect'].midtop )
+                            #print(disk['val'])
+                            #print(disks[floater]['val'])
                         break
                 else: 
                     floating = False
@@ -192,3 +214,55 @@ while not game_done:                     # executes unless the game is over
     if not floating:
     	check_won()
     clock.tick(framerate)
+
+
+
+def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod): 
+    if n == 1: 
+        temp = "Move disk 1 from rod " + from_rod + " to rod " + to_rod + "\n"
+        textbox.insert(END, temp) 
+        return
+    SolTowerOfHanoi(n-1, from_rod, aux_rod, to_rod) 
+    temp2 = "Move disk " + str(n) + " from rod " + from_rod + " to rod " + to_rod + '\n'
+    textbox.insert(END, temp2) 
+    SolTowerOfHanoi(n-1, aux_rod, to_rod, from_rod) 
+
+n = n_disks
+
+   
+root = Tk()
+
+textbox = Text(root)
+textbox.pack()
+
+
+
+root.geometry("640x445+80+110")
+root.configure(background = 'white')
+root.title("Solution")
+menubar = Menu(root)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Divyanisha - regist_no.")
+filemenu.add_command(label="Priya - regist_no.")
+filemenu.add_command(label="Sushil - regist_no.")
+filemenu.add_command(label="Rishabh Mishra - 11811114")
+
+menubar.add_cascade(label="About Us", menu=filemenu)
+editmenu = Menu(menubar, tearoff=0)
+
+url = 'https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi'
+def OpenUrl():
+    webbrowser.open_new(url)
+
+editmenu.add_command(label="Visit GitHub repository", command=OpenUrl )
+editmenu.add_separator()
+editmenu.add_command(label="Exit", command=root.quit)
+menubar.add_cascade(label="Help", menu=editmenu)
+root.config(menu=menubar)
+
+helv36 = font.Font(family='Helvetica', size=15, weight='normal')
+button_1 = Button(width = 610,font=helv36,text = "Solution for " + str(n) +" disks" ,command=SolTowerOfHanoi(n, 'A', 'C', 'B'))
+button_1.pack()
+
+
+root.mainloop()
