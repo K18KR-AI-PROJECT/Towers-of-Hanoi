@@ -44,6 +44,6 @@ Install required modules:
 ``` pip install -r requirements.txt```  
 
 Running the program:
-- On Linux and MacOS, to run the program <br>
+- On Linux and MacOS, to run the program 
 ``` python towersOfHanoi.py ```  
 - For Windows, run it like you run any other python program
