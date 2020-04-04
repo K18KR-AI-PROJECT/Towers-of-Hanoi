@@ -38,11 +38,13 @@ Activate Environment:
 ``` source env/bin/activate```
 - On Windows:
 ``` .\env\Scripts\activate```
-<br>
+
 ``` pip install -r requirements.txt```  
+
 <br>
-(for Linux and MacOS only)<br>
-To run the program <br>
+
+- On Linux and MacOS, to run the program <br>
 ``` python towersOfHanoi.py ```  
+
 <br>
 For Windows, run it like you run any other python program
