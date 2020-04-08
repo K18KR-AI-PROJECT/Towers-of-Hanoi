@@ -8,14 +8,14 @@ from tkinter import font
 
 pygame.init()  # to initialize all the imported pygame modules 
 pygame.display.set_caption("Towers of Hanoi")
-screen = pygame.display.set_mode((640, 480))  #ye tuple type wali argument hai like (1,2)
-clock = pygame.time.Clock()  #its like ki apne program me jo bhi chize update ho sari ek fixed speed pr update ho
+screen = pygame.display.set_mode((640, 480))  
+clock = pygame.time.Clock()  
 
 pygame.mixer.music.load('backsound.mp3')
 pygame.mixer.music.play(-1)
 
 game_done = False
-framerate = 60  #ye clock se related hai
+framerate = 60  
 
 # game vars:
 steps = 0
@@ -38,26 +38,25 @@ green = (77, 206, 145)
 
 
 def blit_text(screen, text, midtop, aa=True, font=None, font_name = None, size = None, color=(255,0,0)):
-    if font is None:                                    # font option is provided to save memory if font is
-        font = pygame.font.SysFont(font_name, size)     # already loaded and needs to be reused many times
-    font_surface = font.render(text, aa, color) #show kr rh hai text ya font ko
+    if font is None:                                    
+        font = pygame.font.SysFont(font_name, size)     
+    font_surface = font.render(text, aa, color)
     font_rect = font_surface.get_rect()
-    font_rect.midtop = midtop #midtop is for positiom
-    screen.blit(font_surface, font_rect) #blitting is like copying of one set of pixels ys to fir jo cheez show ho rhi hai
-    									#to increase the reusability
-
+    font_rect.midtop = midtop 
+    screen.blit(font_surface, font_rect) 
+    									
 
 def menu_screen():  # to be called before starting actual game loop
     global screen, n_disks, game_done
     menu_done = False
-    while not menu_done:  # every screen/scene/level has its own loop   means jab tk true hai
+    while not menu_done:  # every screen/scene/level has its own loop  
         screen.fill(white)
         blit_text(screen, 'Towers of Hanoi', (323,122), font_name='sans serif', size=90, color=grey)
         blit_text(screen, 'Towers of Hanoi', (320,120), font_name='sans serif', size=90, color=gold)
         blit_text(screen, 'Use arrow keys to select difficulty:', (320, 220), font_name='sans serif', size=30, color=black)
         blit_text(screen, str(n_disks), (320, 260), font_name='sans serif', size=40, color=blue)
         blit_text(screen, 'Press ENTER to continue', (320, 320), font_name='sans_serif', size=30, color=black)
-        for event in pygame.event.get():  #inputs lo
+        for event in pygame.event.get():  #inputs 
             if event.type==pygame.KEYDOWN:
                 if event.key == pygame.K_q: #if q is pressed
                     menu_done = True
@@ -89,8 +88,8 @@ def game_over(): # game over screen
     if min_steps==steps:
         blit_text(screen, 'You finished in minumum steps!', (320, 300), font_name='mono', size=26, color=green)
     pygame.display.flip() #ye flip only ek particular part of screen ke contents ko update krta hai
-    						#where as display.upate() pure screen ke contents ko update krta hai
-    time.sleep(2)   # wait for 2 secs 
+    						
+    time.sleep(2)    
     pygame.quit()   #pygame exit
     sys.exit()  #console exit
 
