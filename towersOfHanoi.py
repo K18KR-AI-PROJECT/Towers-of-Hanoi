@@ -3,11 +3,16 @@ import webbrowser
 from tkinter import *
 from tkinter import font
 
+#from playsound import playsound
+
 
 pygame.init()  # to initialize all the imported pygame modules 
 pygame.display.set_caption("Towers of Hanoi")
 screen = pygame.display.set_mode((640, 480))  #ye tuple type wali argument hai like (1,2)
 clock = pygame.time.Clock()  #its like ki apne program me jo bhi chize update ho sari ek fixed speed pr update ho
+
+pygame.mixer.music.load('backsound.mp3')
+pygame.mixer.music.play(-1)
 
 game_done = False
 framerate = 60  #ye clock se related hai
@@ -188,6 +193,7 @@ while not game_done:   #by defaulkt game done is set to false so not gamedone me
                         floating = True
                         floater = disks.index(disk)
                         disk['rect'].midtop = (towers_midx[pointing_at], 100)
+                        #playsound('right.mp3')
                         break
             if event.key == pygame.K_DOWN and floating:
                 for disk in disks[::-1]:
@@ -196,6 +202,12 @@ while not game_done:   #by defaulkt game done is set to false so not gamedone me
                             floating = False
                             disks[floater]['rect'].midtop = (towers_midx[pointing_at], disk['rect'].top-23)
                             steps += 1
+                            #playsound('right.mp3')
+                        else:
+                            #playsound('sound.mp3')
+                            pygame.mixer.music.load('sound.mp3')
+                            pygame.mixer.music.play(0)
+                            
 
                             #print(disks[floater]['rect'].midtop )
                             #print(disk['val'])
@@ -205,6 +217,10 @@ while not game_done:   #by defaulkt game done is set to false so not gamedone me
                     floating = False
                     disks[floater]['rect'].midtop = (towers_midx[pointing_at], 400-23)
                     steps += 1
+                    
+
+    
+
     screen.fill(white) #backgroud color
     draw_towers()
     draw_disks()
