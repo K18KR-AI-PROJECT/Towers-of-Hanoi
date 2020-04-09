@@ -8,7 +8,7 @@ from tkinter import font
 
 pygame.init()  # to initialize all the imported pygame modules 
 pygame.display.set_caption("Towers of Hanoi")
-screen = pygame.display.set_mode((640, 480))  
+screen = pygame.display.set_mode((650, 650))  
 clock = pygame.time.Clock()  
 
 pygame.mixer.music.load('backsound.mp3')
@@ -18,6 +18,7 @@ game_done = False
 framerate = 60  
 
 # game vars:
+SPACE_PER_PEG = 200
 steps = 0
 n_disks = 3
 disks = []
@@ -36,31 +37,84 @@ grey = (170, 170, 170)
 green = (77, 206, 145)
 
 
-
 def blit_text(screen, text, midtop, aa=True, font=None, font_name = None, size = None, color=(255,0,0)):
     if font is None:                                    
         font = pygame.font.SysFont(font_name, size)     
     font_surface = font.render(text, aa, color)
     font_rect = font_surface.get_rect()
     font_rect.midtop = midtop 
-    screen.blit(font_surface, font_rect) 
-    									
+    screen.blit(font_surface, font_rect)     									
 
+def hanoi(pegs, start, target, n):
+    if n == 1:
+        pegs[target].append(pegs[start].pop())
+        yield pegs
+    else:
+        aux = 3 - start - target  # start + target + aux = 3
+        for i in hanoi(pegs, start, aux, n-1): yield i
+        for i in hanoi(pegs, start, target, 1): yield i
+        for i in hanoi(pegs, aux, target, n-1): yield i
+            
+def display_pile_of_pegs(pegs, start_x, start_y, peg_height, screen):
+    """
+    Given a pile of pegs, displays them on the screen, nicely inpilated
+    like in a piramid, the smaller in lighter color.
+    """
+    for i, pegwidth in enumerate(pegs): 
+        pygame.draw.rect(
+            screen,
+            # Smaller pegs are ligher in color
+            (255-pegwidth, 255-pegwidth, 255-pegwidth),
+            (
+              start_x + (SPACE_PER_PEG - pegwidth)/2 , # Handles alignment putting pegs in the middle, like a piramid
+              start_y - peg_height * i,                # Pegs are one on top of the other, height depends on iteration
+              pegwidth,
+              peg_height
+            )
+        )
+        
+def visual_hanoi(number_of_pegs, base_width, peg_height, sleeping_interval, msteps):
+    """
+    Visually shows the process of optimal solution of an tower of hanoi problem.
+    """
+    pegs = [[i * base_width for i in reversed(range(1, number_of_pegs+1))], [], []]
+    positions = hanoi(pegs, 0, 2, number_of_pegs)
+
+    pygame.init()
+    screen = pygame.display.set_mode( (650, 650) )
+    pygame.display.set_caption('Towers of Hanoi Solution')
+    time.sleep(1)
+    for position in positions:
+        screen.fill(white) 
+        msteps+=1
+        blit_text(screen, 'Steps: '+str(msteps), (320, 20), font_name='mono', size=30, color=black)
+        for i, pile in enumerate(position):
+            display_pile_of_pegs(pile, 50 + SPACE_PER_PEG*i, 500, peg_height, screen)
+        
+        pygame.display.update()
+        time.sleep(sleeping_interval)
+        
+def exitgame():
+    pygame.quit()
+    sys.exit()
+        
 def menu_screen():  # to be called before starting actual game loop
     global screen, n_disks, game_done
     menu_done = False
     while not menu_done:  # every screen/scene/level has its own loop  
         screen.fill(white)
-        blit_text(screen, 'Towers of Hanoi', (323,122), font_name='sans serif', size=90, color=grey)
-        blit_text(screen, 'Towers of Hanoi', (320,120), font_name='sans serif', size=90, color=gold)
-        blit_text(screen, 'Use arrow keys to select difficulty:', (320, 220), font_name='sans serif', size=30, color=black)
-        blit_text(screen, str(n_disks), (320, 260), font_name='sans serif', size=40, color=blue)
-        blit_text(screen, 'Press ENTER to continue', (320, 320), font_name='sans_serif', size=30, color=black)
+        button('Help',550,20,70,30,blue, grey,action='Help',tcolor=white, size=20)
+        blit_text(screen, 'Towers of Hanoi', (323,192), font_name='sans serif', size=90, color=grey)
+        blit_text(screen, 'Towers of Hanoi', (320,190), font_name='sans serif', size=90, color=gold)
+        blit_text(screen, 'Use arrow keys to select difficulty:', (320, 290), font_name='sans serif', size=30, color=black)
+        blit_text(screen, str(n_disks), (320, 330), font_name='sans serif', size=40, color=blue)
+        blit_text(screen, 'Press ENTER to continue', (320, 390), font_name='sans_serif', size=30, color=black)
         for event in pygame.event.get():  #inputs 
             if event.type==pygame.KEYDOWN:
                 if event.key == pygame.K_q: #if q is pressed
-                    menu_done = True
-                    game_done = True  #end the game execution
+                    exitgame()
+                    '''menu_done = True
+                    game_done = True  #end the game execution'''
                 if event.key == pygame.K_RETURN:
                     menu_done = True
                 if event.key in [pygame.K_RIGHT, pygame.K_UP]:
@@ -69,14 +123,14 @@ def menu_screen():  # to be called before starting actual game loop
                         n_disks = 6 #isko change krke maximum kitne bolock chahiye hum increase kr skte hai
                 if event.key in [pygame.K_LEFT, pygame.K_DOWN]:
                     n_disks -= 1
-                    if n_disks < 1:
-                        n_disks = 1
+                    if n_disks < 2:
+                        n_disks = 2
             if event.type == pygame.QUIT:  #end kr rhe hai window ko yua end kr rhe hai game ko
                 menu_done = True
                 game_done = True
         pygame.display.flip() #ye wali call is required in order for any updates that you make to the game screen to become visible.
         clock.tick(60)  #60is frames per seconds ki kiss rate pr update hoga
-
+        
 def game_over(): # game over screen
     global screen, steps
     screen.fill(white)
@@ -103,10 +157,7 @@ def draw_towers():
     blit_text(screen, 'Start', (towers_midx[0], 403), font_name='mono', size=14, color=black)
     #print(towers_midx[0])
     blit_text(screen, 'Finish', (towers_midx[2], 403), font_name='mono', size=14, color=black)
-
     
-
-
 def make_disks():
     global n_disks, disks
     disks = []
@@ -132,7 +183,6 @@ def make_disks():
         #print(disk['rect'].midtop)
         #print(xpos)
 
-
 def draw_disks():
     global screen, disks
     for disk in disks:
@@ -144,6 +194,45 @@ def draw_ptr():
     pygame.draw.polygon(screen, red, ptr_points) #make the arrow below the tower used to indicate the current sselcted tower
     return
 
+def textbutton(msg, color, x, y, width, height, size):
+    font = pygame.font.SysFont('mono', size)
+    text_surf = font.render(msg, True, color)
+    text_rect = text_surf.get_rect()
+    text_rect.center = ((x+(width/2)), y+(height/2))
+    screen.blit(text_surf,text_rect)
+    
+def reset():
+    global steps,pointing_at,floating,floater
+    steps = 0
+    pointing_at = 0
+    floating = False
+    floater = 0
+    menu_screen()
+    make_disks()
+       
+def button(text, x, y, width, height, inactive_color, active_color, action=None, tcolor=black, size=27):
+    cur=pygame.mouse.get_pos()
+    click=pygame.mouse.get_pressed()
+    #print(click)
+    if (x + width > cur[0] > x and y + height > cur[1] > y):
+        pygame.draw.rect(screen, active_color, (x, y, width, height))
+        if click[0]==1 and action!=None:
+            if action=='Solution':          # 'Solution' button pressed
+                visual_hanoi(number_of_pegs = n_disks,base_width = 30,peg_height = 40,sleeping_interval = 0.7,msteps=0)
+                pygame.display.set_caption('Towers of Hanoi')
+                
+            if action=='Menu':              # 'Menu' button pressed
+                reset()
+                
+            if action=='Help':
+                pass
+            '''if action=='Quit':           # 'Quit' button pressed
+                exitgame()'''
+    else:
+        pygame.draw.rect(screen, inactive_color, (x, y, width, height))
+    textbutton(text, tcolor, x, y, width, height, size)          # write text on button
+    
+
 def check_won():
     global disks
     over = True
@@ -153,29 +242,19 @@ def check_won():
     if over:
         time.sleep(0.2)  #wait for 0.2seconds
         game_over()
-
-def reset():
-    global steps,pointing_at,floating,floater
-    steps = 0
-    pointing_at = 0
-    floating = False
-    floater = 0
-    menu_screen()
-    make_disks()
-
-
+            
 menu_screen()
 make_disks()
 # main game loop:
-while not game_done:   #by defaulkt game done is set to false so not gamedone means true
+while not game_done:   #by default game done is set to false so not gamedone means true
     for event in pygame.event.get():     #event indicates kya perform ho rha hai it can be mouse click or keyboard click
         if event.type == pygame.QUIT:  #pygame ke modules ko jab clode kr rhe hai
-            game_done = True
+            exitgame()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE: #when in between the game escape is pressed
                 reset()
-            if event.key == pygame.K_q:  #whrn Q button on keyboardis pressed
-                game_done = True
+            if event.key == pygame.K_q:  #whrn Q button on keyboard is pressed
+                exitgame()
             if event.key == pygame.K_RIGHT:
                 pointing_at = (pointing_at+1)%3  #axis me move krte samay right side is positive and leftside is negative wrt to any point
                 if floating:
@@ -216,22 +295,23 @@ while not game_done:   #by defaulkt game done is set to false so not gamedone me
                     floating = False
                     disks[floater]['rect'].midtop = (towers_midx[pointing_at], 400-23)
                     steps += 1
-                    
-
-    
 
     screen.fill(white) #backgroud color
     draw_towers()
     draw_disks()
     draw_ptr()
     blit_text(screen, 'Steps: '+str(steps), (320, 20), font_name='mono', size=30, color=black)
-    pygame.display.flip() #update
-    if not floating:
-    	check_won()
+    button('Menu',20,550,110,50,grey,gold,action='Menu')
+    button('Solution',480,550,140,50,grey,red,action='Solution')
+    button('Help',550,20,70,30,blue,grey,action='Help', tcolor=white, size=20)
+    #button('Quit',520,20,110,40,grey,red,action='Exit')
+    pygame.display.flip()     # update
+    if not floating:check_won()
     clock.tick(framerate)
+exitgame()
 
 
-
+'''
 def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod): 
     if n == 1: 
         temp = "Move disk 1 from rod " + from_rod + " to rod " + to_rod + "\n"
@@ -242,15 +322,11 @@ def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod):
     textbox.insert(END, temp2) 
     SolTowerOfHanoi(n-1, aux_rod, to_rod, from_rod) 
 
-n = n_disks
-
-   
+n = n_disks   
 root = Tk()
 
 textbox = Text(root)
 textbox.pack()
-
-
 
 root.geometry("640x445+80+110")
 root.configure(background = 'white')
@@ -280,4 +356,4 @@ button_1 = Button(width = 610,font=helv36,text = "Solution for " + str(n) +" dis
 button_1.pack()
 
 
-root.mainloop()
+root.mainloop()'''
