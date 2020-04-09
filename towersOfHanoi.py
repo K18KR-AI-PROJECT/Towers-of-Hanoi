@@ -373,7 +373,7 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     draw_disks()
     draw_ptr()
     blit_text(screen, 'Steps: '+str(steps), (320, 20), font_name='mono', size=30, color=black)
-    button('Menu',20,550,110,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
+    button('Menu',27,550,110,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
     button('Solution',465,550,150,40,grey,manual_text_color,action='Solution', size = 20,tcolor=white)
     button('Manual',500,20,120,40,grey,manual_text_color,action='Help', tcolor=white, size=20)
     #button('Visit GitHub',30,20,200,40, grey, manual_text_color,action='Github',tcolor=white, size=20)
