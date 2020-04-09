@@ -119,8 +119,8 @@ def menu_screen():  # to be called before starting actual game loop
                     menu_done = True
                 if event.key in [pygame.K_RIGHT, pygame.K_UP]:
                     n_disks += 1
-                    if n_disks > 6:
-                        n_disks = 6 #isko change krke maximum kitne bolock chahiye hum increase kr skte hai
+                    if n_disks > 8:
+                        n_disks = 8 #isko change krke maximum kitne bolock chahiye hum increase kr skte hai
                 if event.key in [pygame.K_LEFT, pygame.K_DOWN]:
                     n_disks -= 1
                     if n_disks < 2:
