@@ -1,9 +1,11 @@
 import pygame, sys, time
+import random
+from pygame.locals import *
 import webbrowser
-from tkinter import *
-from tkinter import font
+#from tkinter import *
+#from tkinter import font
 
-#from playsound import playsound
+from playsound import playsound
 
 
 pygame.init()  # to initialize all the imported pygame modules 
@@ -35,6 +37,19 @@ gold = (239, 229, 51)
 blue = (78,162,196) 
 grey = (170, 170, 170)
 green = (77, 206, 145)
+logo_color = (136, 212, 152)
+logo_background = (26, 174, 111)
+test_menu_back = (254, 219, 39)
+
+
+def color_generator():
+	r = random.randint(0,255)
+	g = random.randint(0,255)
+	b = random.randint(0,255)
+	rgb = (r,g,b)
+	return rgb
+
+rgb = color_generator()
 
 
 def blit_text(screen, text, midtop, aa=True, font=None, font_name = None, size = None, color=(255,0,0)):
@@ -93,22 +108,41 @@ def visual_hanoi(number_of_pegs, base_width, peg_height, sleeping_interval, mste
         
         pygame.display.update()
         time.sleep(sleeping_interval)
-        
+   
+
 def exitgame():
     pygame.quit()
     sys.exit()
         
+global text1, text2, text3, text4
+text1 = ''
+text2 = ''
+text3 = ''
+text4 = ''
+
+def text_fun():
+    if menu_done == False:
+        text1 = 'Towers of Hanoi'
+        text2 = 'Towers of Hanoi'
+        text3 = 'Use arrow keys to select difficulty:'
+        text4 = 'Press ENTER to continue'
+        blit_text(screen, text1, (323,192), font_name='sans serif', size=90, color=grey)
+        blit_text(screen, text2, (320,190), font_name='sans serif', size=90, color=logo_color)
+        blit_text(screen, text3, (320, 290), font_name='sans serif', size=30, color=black)
+        blit_text(screen, str(n_disks), (320, 330), font_name='sans serif', size=40, color=blue)
+        blit_text(screen, text4, (320, 390), font_name='sans_serif', size=30, color=black)
+    
+
+
 def menu_screen():  # to be called before starting actual game loop
-    global screen, n_disks, game_done
+    global screen, n_disks, game_done, menu_done
     menu_done = False
     while not menu_done:  # every screen/scene/level has its own loop  
         screen.fill(white)
-        button('Help',550,20,70,30,blue, grey,action='Help',tcolor=white, size=20)
-        blit_text(screen, 'Towers of Hanoi', (323,192), font_name='sans serif', size=90, color=grey)
-        blit_text(screen, 'Towers of Hanoi', (320,190), font_name='sans serif', size=90, color=gold)
-        blit_text(screen, 'Use arrow keys to select difficulty:', (320, 290), font_name='sans serif', size=30, color=black)
-        blit_text(screen, str(n_disks), (320, 330), font_name='sans serif', size=40, color=blue)
-        blit_text(screen, 'Press ENTER to continue', (320, 390), font_name='sans_serif', size=30, color=black)
+        button('Manual',500,20,120,40,grey,manual_text_color,action='Help',tcolor=white, size=20)
+        text_fun()
+        button('Visit GitHub',30,20,200,40, grey, manual_text_color,action='Github',tcolor=white, size=20)
+        
         for event in pygame.event.get():  #inputs 
             if event.type==pygame.KEYDOWN:
                 if event.key == pygame.K_q: #if q is pressed
@@ -186,7 +220,7 @@ def make_disks():
 def draw_disks():
     global screen, disks
     for disk in disks:
-        pygame.draw.rect(screen, blue, disk['rect']) #make the duisk
+        pygame.draw.rect(screen, manual_text_color, disk['rect']) #make the duisk
     return
 
 def draw_ptr():
@@ -209,7 +243,13 @@ def reset():
     floater = 0
     menu_screen()
     make_disks()
-       
+
+
+def webLinker():
+    webbrowser.open_new('https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi')
+    exitgame()
+
+
 def button(text, x, y, width, height, inactive_color, active_color, action=None, tcolor=black, size=27):
     cur=pygame.mouse.get_pos()
     click=pygame.mouse.get_pressed()
@@ -225,7 +265,14 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 reset()
                 
             if action=='Help':
-                pass
+                manual_page()
+                pygame.display.set_caption('Towers of Hanoi')
+                
+            if action == 'Github':
+                webLinker()
+                
+                
+                
             '''if action=='Quit':           # 'Quit' button pressed
                 exitgame()'''
     else:
@@ -242,7 +289,29 @@ def check_won():
     if over:
         time.sleep(0.2)  #wait for 0.2seconds
         game_over()
-            
+
+manual_text_color = (153, 185, 152)
+manual_text_color2 = (253, 206, 170)
+manual_background_color = (39, 54, 59)
+
+def manual_page():
+    pygame.init()
+    screen = pygame.display.set_mode((650,650)) 
+    screen.fill(manual_background_color)
+    pygame.display.set_caption('Manual')
+    blit_text(screen, ' INSTRUCTIONS :)', (323,100), font_name='sans serif', size=50, color=manual_text_color)
+    blit_text(screen, 'a. Use Up arrow key to increase number of blocks and Down arrow to do opposite', (320, 200), font_name='sans serif', size=23, color=manual_text_color)
+    blit_text(screen, 'b. Use Arrows on keyboard to move the disks', (320, 247), font_name='sans serif', size=23, color=manual_text_color)
+    blit_text(screen, 'c. Only one disk can be moved at a time', (320, 287), font_name='sans serif', size=23, color=manual_text_color)
+    blit_text(screen, 'd. No bigger disk can be placed on top of the smaller disk', (320, 327), font_name='sans serif', size=23, color=manual_text_color)
+    pygame.display.update()
+    time.sleep(2)
+ 
+
+"""def test_func():
+    print("test!!")"""
+
+
 menu_screen()
 make_disks()
 # main game loop:
@@ -282,9 +351,12 @@ while not game_done:   #by default game done is set to false so not gamedone mea
                             steps += 1
                             #playsound('right.mp3')
                         else:
-                            #playsound('sound.mp3')
-                            pygame.mixer.music.load('sound.mp3')
-                            pygame.mixer.music.play(0)
+                            #blit_text(screen, 'Illegal Move!!', (323,192), font_name='sans serif', size=90, color=red)
+                            
+                            
+                            playsound('sound.mp3')
+                            #pygame.mixer.music.load('sound.mp3')
+                            #pygame.mixer.music.play(0)
                             
 
                             #print(disks[floater]['rect'].midtop )
@@ -301,9 +373,10 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     draw_disks()
     draw_ptr()
     blit_text(screen, 'Steps: '+str(steps), (320, 20), font_name='mono', size=30, color=black)
-    button('Menu',20,550,110,50,grey,gold,action='Menu')
-    button('Solution',480,550,140,50,grey,red,action='Solution')
-    button('Help',550,20,70,30,blue,grey,action='Help', tcolor=white, size=20)
+    button('Menu',20,550,110,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
+    button('Solution',465,550,150,40,grey,manual_text_color,action='Solution', size = 20,tcolor=white)
+    button('Manual',500,20,120,40,grey,manual_text_color,action='Help', tcolor=white, size=20)
+    #button('Visit GitHub',30,20,200,40, grey, manual_text_color,action='Github',tcolor=white, size=20)
     #button('Quit',520,20,110,40,grey,red,action='Exit')
     pygame.display.flip()     # update
     if not floating:check_won()
