@@ -305,7 +305,7 @@ def manual_page():
     blit_text(screen, 'c. Only one disk can be moved at a time', (320, 287), font_name='sans serif', size=23, color=manual_text_color)
     blit_text(screen, 'd. No bigger disk can be placed on top of the smaller disk', (320, 327), font_name='sans serif', size=23, color=manual_text_color)
     pygame.display.update()
-    time.sleep(2)
+    time.sleep(4)
  
 
 """def test_func():
