@@ -2,7 +2,7 @@ import pygame, sys, time
 import random
 from pygame.locals import *
 import webbrowser
-from playsound import playsound
+
 
 
 pygame.init()  # to initialize all the imported pygame modules 
