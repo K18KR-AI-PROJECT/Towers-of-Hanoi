@@ -305,7 +305,7 @@ def manual_page():
     blit_text(screen, 'f. Press ESC to head to Game Menu', (320, 407), font_name='sans serif', size=23, color=manual_text_color)
     #button('< Go back to menu',27,550,240,40,grey,manual_text_color,action='Mainenu',tcolor=white, size = 20)
     pygame.display.update()
-    time.sleep(6)
+    time.sleep(5)
     
  
 
