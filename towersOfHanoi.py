@@ -2,8 +2,6 @@ import pygame, sys, time
 import random
 from pygame.locals import *
 import webbrowser
-#from tkinter import *
-#from tkinter import font
 
 from playsound import playsound
 
@@ -210,18 +208,15 @@ def make_disks():
         disk['rect'].midtop = (120, ypos)  #midtop is used for poisitoning the element
         disk['val'] = n_disks-i
 
-       # print(disk['val'])
 
         disk['tower'] = 0
         disks.append(disk)
         ypos -= height+3
         width -= 23
 
-        #print(ypos)
+        
         disk_number = str(i+1)
-        #print("Cordinate of disk " + disk_number)
-        #print(disk['rect'].midtop)
-        #print(xpos)
+        
 
 def draw_disks():
     global screen, disks
@@ -400,51 +395,3 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     if not floating:check_won()
     clock.tick(framerate)
 exitgame()
-
-
-'''
-def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod): 
-    if n == 1: 
-        temp = "Move disk 1 from rod " + from_rod + " to rod " + to_rod + "\n"
-        textbox.insert(END, temp) 
-        return
-    SolTowerOfHanoi(n-1, from_rod, aux_rod, to_rod) 
-    temp2 = "Move disk " + str(n) + " from rod " + from_rod + " to rod " + to_rod + '\n'
-    textbox.insert(END, temp2) 
-    SolTowerOfHanoi(n-1, aux_rod, to_rod, from_rod) 
-
-n = n_disks   
-root = Tk()
-
-textbox = Text(root)
-textbox.pack()
-
-root.geometry("640x445+80+110")
-root.configure(background = 'white')
-root.title("Solution")
-menubar = Menu(root)
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Divyanisha - 11810030")
-filemenu.add_command(label="Priya - 11810037")
-filemenu.add_command(label="Sushil - 11809930")
-filemenu.add_command(label="Rishabh - 11811114")
-
-menubar.add_cascade(label="About Us", menu=filemenu)
-editmenu = Menu(menubar, tearoff=0)
-
-url = 'https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi'
-def OpenUrl():
-    webbrowser.open_new(url)
-
-editmenu.add_command(label="Visit GitHub repository", command=OpenUrl )
-editmenu.add_separator()
-editmenu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="Help", menu=editmenu)
-root.config(menu=menubar)
-
-helv36 = font.Font(family='Helvetica', size=15, weight='normal')
-button_1 = Button(width = 610,font=helv36,text = "Solution for " + str(n) +" disks" ,command=SolTowerOfHanoi(n, 'A', 'C', 'B'))
-button_1.pack()
-
-
-root.mainloop()'''
