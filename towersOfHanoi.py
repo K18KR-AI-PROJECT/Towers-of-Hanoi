@@ -2,12 +2,16 @@ import pygame, sys, time
 import random
 from pygame.locals import *
 import webbrowser
+#from tkinter import *
+#from tkinter import font
 
+from playsound import playsound
 
 
 pygame.init()  # to initialize all the imported pygame modules 
 pygame.display.set_caption("Towers of Hanoi")
-screen = pygame.display.set_mode((650, 650))  
+main_window_length = 650
+screen = pygame.display.set_mode((main_window_length, 650))  
 clock = pygame.time.Clock()  
 
 pygame.mixer.music.load('backsound.mp3')
@@ -17,7 +21,7 @@ game_done = False
 framerate = 60  
 
 # game vars:
-SPACE_PER_PEG = 200
+SPACE_PER_PEG = 300 
 steps = 0
 n_disks = 3
 disks = []
@@ -37,6 +41,8 @@ green = (77, 206, 145)
 logo_color = (136, 212, 152)
 logo_background = (26, 174, 111)
 test_menu_back = (254, 219, 39)
+
+global temp_sleeping_interval 
 
 
 def color_generator():
@@ -72,6 +78,7 @@ def display_pile_of_pegs(pegs, start_x, start_y, peg_height, screen):
     Given a pile of pegs, displays them on the screen, nicely inpilated
     like in a piramid, the smaller in lighter color.
     """
+    
     for i, pegwidth in enumerate(pegs): 
         pygame.draw.rect(
             screen,
@@ -93,13 +100,15 @@ def visual_hanoi(number_of_pegs, base_width, peg_height, sleeping_interval, mste
     positions = hanoi(pegs, 0, 2, number_of_pegs)
 
     pygame.init()
-    screen = pygame.display.set_mode( (650, 650) )
+    screen = pygame.display.set_mode( (1000, 650) )
     pygame.display.set_caption('Towers of Hanoi Solution')
+    
     time.sleep(1)
     for position in positions:
         screen.fill(white) 
+        button('< Head back ',10,10,240,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
         msteps+=1
-        blit_text(screen, 'Steps: '+str(msteps), (320, 20), font_name='mono', size=30, color=black)
+        blit_text(screen, 'Steps: '+str(msteps), (500, 20), font_name='mono', size=30, color=black)
         for i, pile in enumerate(position):
             display_pile_of_pegs(pile, 50 + SPACE_PER_PEG*i, 500, peg_height, screen)
         
@@ -174,7 +183,7 @@ def game_over(): # game over screen
         blit_text(screen, 'You finished in minumum steps!', (320, 300), font_name='mono', size=26, color=green)
     pygame.display.flip() #ye flip only ek particular part of screen ke contents ko update krta hai
     						
-    time.sleep(4)    
+    time.sleep(2)    
     pygame.quit()   #pygame exit
     sys.exit()  #console exit
 
@@ -182,11 +191,11 @@ def draw_towers():
     global screen
     for xpos in range(40, 460+1, 200):
         pygame.draw.rect(screen, green, pygame.Rect(xpos, 400, 160 , 20))
-       
+        #print(xpos)
         pygame.draw.rect(screen, grey, pygame.Rect(xpos+75, 200, 10, 200))
-        
+        #print(xpos)
     blit_text(screen, 'Start', (towers_midx[0], 403), font_name='mono', size=14, color=black)
-    
+    #print(towers_midx[0])
     blit_text(screen, 'Finish', (towers_midx[2], 403), font_name='mono', size=14, color=black)
     
 def make_disks():
@@ -201,15 +210,18 @@ def make_disks():
         disk['rect'].midtop = (120, ypos)  #midtop is used for poisitoning the element
         disk['val'] = n_disks-i
 
+       # print(disk['val'])
 
         disk['tower'] = 0
         disks.append(disk)
         ypos -= height+3
         width -= 23
 
-        
+        #print(ypos)
         disk_number = str(i+1)
-        
+        #print("Cordinate of disk " + disk_number)
+        #print(disk['rect'].midtop)
+        #print(xpos)
 
 def draw_disks():
     global screen, disks
@@ -244,6 +256,7 @@ def webLinker():
     exitgame()
 
 
+
 def button(text, x, y, width, height, inactive_color, active_color, action=None, tcolor=black, size=27):
     cur=pygame.mouse.get_pos()
     click=pygame.mouse.get_pressed()
@@ -252,8 +265,12 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
         pygame.draw.rect(screen, active_color, (x, y, width, height))
         if click[0]==1 and action!=None:
             if action=='Solution':          # 'Solution' button pressed
-                visual_hanoi(number_of_pegs = n_disks,base_width = 30,peg_height = 40,sleeping_interval = 0.7,msteps=0)
+                temp_sleeping_interval = 0.7
+                if n_disks >= 5:
+                    temp_sleeping_interval = 0.2
+                visual_hanoi(number_of_pegs = n_disks,base_width = 30,peg_height = 40,sleeping_interval = temp_sleeping_interval,msteps=0)
                 pygame.display.set_caption('Towers of Hanoi')
+                pygame.display.set_mode((main_window_length, 650))  
                 
             if action=='Menu':              # 'Menu' button pressed
                 reset()
@@ -305,11 +322,12 @@ def manual_page():
     blit_text(screen, 'f. Press ESC to head to Game Menu', (320, 407), font_name='sans serif', size=23, color=manual_text_color)
     #button('< Go back to menu',27,550,240,40,grey,manual_text_color,action='Mainenu',tcolor=white, size = 20)
     pygame.display.update()
-    time.sleep(5)
+    time.sleep(4)
     
  
 
-
+"""def test_func():
+    print("test!!")"""
 
 #manual_page()
 menu_screen()
@@ -368,7 +386,7 @@ while not game_done:   #by default game done is set to false so not gamedone mea
                     disks[floater]['rect'].midtop = (towers_midx[pointing_at], 400-23)
                     steps += 1
 
-    screen.fill(white) #background color
+    screen.fill(white) #backgroud color
     draw_towers()
     draw_disks()
     draw_ptr()
@@ -382,3 +400,51 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     if not floating:check_won()
     clock.tick(framerate)
 exitgame()
+
+
+'''
+def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod): 
+    if n == 1: 
+        temp = "Move disk 1 from rod " + from_rod + " to rod " + to_rod + "\n"
+        textbox.insert(END, temp) 
+        return
+    SolTowerOfHanoi(n-1, from_rod, aux_rod, to_rod) 
+    temp2 = "Move disk " + str(n) + " from rod " + from_rod + " to rod " + to_rod + '\n'
+    textbox.insert(END, temp2) 
+    SolTowerOfHanoi(n-1, aux_rod, to_rod, from_rod) 
+
+n = n_disks   
+root = Tk()
+
+textbox = Text(root)
+textbox.pack()
+
+root.geometry("640x445+80+110")
+root.configure(background = 'white')
+root.title("Solution")
+menubar = Menu(root)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Divyanisha - 11810030")
+filemenu.add_command(label="Priya - 11810037")
+filemenu.add_command(label="Sushil - 11809930")
+filemenu.add_command(label="Rishabh - 11811114")
+
+menubar.add_cascade(label="About Us", menu=filemenu)
+editmenu = Menu(menubar, tearoff=0)
+
+url = 'https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi'
+def OpenUrl():
+    webbrowser.open_new(url)
+
+editmenu.add_command(label="Visit GitHub repository", command=OpenUrl )
+editmenu.add_separator()
+editmenu.add_command(label="Exit", command=root.quit)
+menubar.add_cascade(label="Help", menu=editmenu)
+root.config(menu=menubar)
+
+helv36 = font.Font(family='Helvetica', size=15, weight='normal')
+button_1 = Button(width = 610,font=helv36,text = "Solution for " + str(n) +" disks" ,command=SolTowerOfHanoi(n, 'A', 'C', 'B'))
+button_1.pack()
+
+
+root.mainloop()'''
