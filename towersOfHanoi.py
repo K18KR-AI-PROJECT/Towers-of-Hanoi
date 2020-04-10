@@ -2,9 +2,6 @@ import pygame, sys, time
 import random
 from pygame.locals import *
 import webbrowser
-#from tkinter import *
-#from tkinter import font
-
 from playsound import playsound
 
 
@@ -177,7 +174,7 @@ def game_over(): # game over screen
         blit_text(screen, 'You finished in minumum steps!', (320, 300), font_name='mono', size=26, color=green)
     pygame.display.flip() #ye flip only ek particular part of screen ke contents ko update krta hai
     						
-    time.sleep(2)    
+    time.sleep(4)    
     pygame.quit()   #pygame exit
     sys.exit()  #console exit
 
@@ -185,11 +182,11 @@ def draw_towers():
     global screen
     for xpos in range(40, 460+1, 200):
         pygame.draw.rect(screen, green, pygame.Rect(xpos, 400, 160 , 20))
-        #print(xpos)
+       
         pygame.draw.rect(screen, grey, pygame.Rect(xpos+75, 200, 10, 200))
-        #print(xpos)
+        
     blit_text(screen, 'Start', (towers_midx[0], 403), font_name='mono', size=14, color=black)
-    #print(towers_midx[0])
+    
     blit_text(screen, 'Finish', (towers_midx[2], 403), font_name='mono', size=14, color=black)
     
 def make_disks():
@@ -204,18 +201,15 @@ def make_disks():
         disk['rect'].midtop = (120, ypos)  #midtop is used for poisitoning the element
         disk['val'] = n_disks-i
 
-       # print(disk['val'])
 
         disk['tower'] = 0
         disks.append(disk)
         ypos -= height+3
         width -= 23
 
-        #print(ypos)
+        
         disk_number = str(i+1)
-        #print("Cordinate of disk " + disk_number)
-        #print(disk['rect'].midtop)
-        #print(xpos)
+        
 
 def draw_disks():
     global screen, disks
@@ -311,12 +305,11 @@ def manual_page():
     blit_text(screen, 'f. Press ESC to head to Game Menu', (320, 407), font_name='sans serif', size=23, color=manual_text_color)
     #button('< Go back to menu',27,550,240,40,grey,manual_text_color,action='Mainenu',tcolor=white, size = 20)
     pygame.display.update()
-    time.sleep(4)
+    time.sleep(6)
     
  
 
-"""def test_func():
-    print("test!!")"""
+
 
 #manual_page()
 menu_screen()
@@ -375,7 +368,7 @@ while not game_done:   #by default game done is set to false so not gamedone mea
                     disks[floater]['rect'].midtop = (towers_midx[pointing_at], 400-23)
                     steps += 1
 
-    screen.fill(white) #backgroud color
+    screen.fill(white) #background color
     draw_towers()
     draw_disks()
     draw_ptr()
@@ -389,51 +382,3 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     if not floating:check_won()
     clock.tick(framerate)
 exitgame()
-
-
-'''
-def SolTowerOfHanoi(n , from_rod, to_rod, aux_rod): 
-    if n == 1: 
-        temp = "Move disk 1 from rod " + from_rod + " to rod " + to_rod + "\n"
-        textbox.insert(END, temp) 
-        return
-    SolTowerOfHanoi(n-1, from_rod, aux_rod, to_rod) 
-    temp2 = "Move disk " + str(n) + " from rod " + from_rod + " to rod " + to_rod + '\n'
-    textbox.insert(END, temp2) 
-    SolTowerOfHanoi(n-1, aux_rod, to_rod, from_rod) 
-
-n = n_disks   
-root = Tk()
-
-textbox = Text(root)
-textbox.pack()
-
-root.geometry("640x445+80+110")
-root.configure(background = 'white')
-root.title("Solution")
-menubar = Menu(root)
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Divyanisha - 11810030")
-filemenu.add_command(label="Priya - 11810037")
-filemenu.add_command(label="Sushil - 11809930")
-filemenu.add_command(label="Rishabh - 11811114")
-
-menubar.add_cascade(label="About Us", menu=filemenu)
-editmenu = Menu(menubar, tearoff=0)
-
-url = 'https://github.com/K18KR-AI-PROJECT/Towers-of-Hanoi'
-def OpenUrl():
-    webbrowser.open_new(url)
-
-editmenu.add_command(label="Visit GitHub repository", command=OpenUrl )
-editmenu.add_separator()
-editmenu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="Help", menu=editmenu)
-root.config(menu=menubar)
-
-helv36 = font.Font(family='Helvetica', size=15, weight='normal')
-button_1 = Button(width = 610,font=helv36,text = "Solution for " + str(n) +" disks" ,command=SolTowerOfHanoi(n, 'A', 'C', 'B'))
-button_1.pack()
-
-
-root.mainloop()'''
