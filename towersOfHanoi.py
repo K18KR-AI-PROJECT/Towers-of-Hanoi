@@ -270,6 +270,9 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 
             if action == 'Github':
                 webLinker()
+
+            if action == 'Mainmenu':
+                menu_screen()
                 
                 
                 
@@ -304,14 +307,18 @@ def manual_page():
     blit_text(screen, 'b. Use Arrows on keyboard to move the disks', (320, 247), font_name='sans serif', size=23, color=manual_text_color)
     blit_text(screen, 'c. Only one disk can be moved at a time', (320, 287), font_name='sans serif', size=23, color=manual_text_color)
     blit_text(screen, 'd. No bigger disk can be placed on top of the smaller disk', (320, 327), font_name='sans serif', size=23, color=manual_text_color)
+    blit_text(screen, 'e. Press Q to Quit the game', (320, 367), font_name='sans serif', size=23, color=manual_text_color)
+    blit_text(screen, 'f. Press ESC to head to Game Menu', (320, 407), font_name='sans serif', size=23, color=manual_text_color)
+    #button('< Go back to menu',27,550,240,40,grey,manual_text_color,action='Mainenu',tcolor=white, size = 20)
     pygame.display.update()
     time.sleep(4)
+    
  
 
 """def test_func():
     print("test!!")"""
 
-
+#manual_page()
 menu_screen()
 make_disks()
 # main game loop:
@@ -352,7 +359,7 @@ while not game_done:   #by default game done is set to false so not gamedone mea
                             #playsound('right.mp3')
                         else:
                             #blit_text(screen, 'Illegal Move!!', (323,192), font_name='sans serif', size=90, color=red)
-                            
+                            print("Illegal move!!!")
                             
                             playsound('sound.mp3')
                             #pygame.mixer.music.load('sound.mp3')
@@ -373,7 +380,7 @@ while not game_done:   #by default game done is set to false so not gamedone mea
     draw_disks()
     draw_ptr()
     blit_text(screen, 'Steps: '+str(steps), (320, 20), font_name='mono', size=30, color=black)
-    button('Menu',27,550,110,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
+    button('< Go back to menu',27,550,240,40,grey,manual_text_color,action='Menu',tcolor=white, size = 20)
     button('Solution',465,550,150,40,grey,manual_text_color,action='Solution', size = 20,tcolor=white)
     button('Manual',500,20,120,40,grey,manual_text_color,action='Help', tcolor=white, size=20)
     #button('Visit GitHub',30,20,200,40, grey, manual_text_color,action='Github',tcolor=white, size=20)
